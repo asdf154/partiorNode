@@ -17,6 +17,6 @@
   },
   "scripts": {
     "start": "SET NODE_ENV=dev&& nodemon src/main/server.js",
-    "test": "mocha --timeout 10000"
+    "test": "mocha --parallel --timeout 10000 src/test"
   }
 }

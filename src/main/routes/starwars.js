@@ -2,10 +2,10 @@
 const got = require('got');
 let baseApiUrl = "https://swapi.dev/api/"
 
-
+//todo: logging and log level, maybe
 
 function get(url) {
-	// console.debug(`get:\"${url}\"`)
+	// console.debug(`${new Date()} called get:\"${url}\"`)
 	
 	return got(url, {responseType: 'json'}).then(response => {
 	  return response.body;
@@ -52,7 +52,7 @@ function getPlanet(maybeSearchString = "") {
 
 
 function isPersonOnPlanet(person, planet) {
-	if(!!planet && planet.residents.length > 0) return planet.residents.includes(person.url);
+	if(!!planet && !! planet.residents && planet.residents.length > 0) return planet.residents.includes(person.url);
 	return false;
 }
 
@@ -61,11 +61,16 @@ function getOrElse(optional, elseValue) {
 	else return elseValue;
 }
 
-async function getInformation(req, res) {
-	console.log(`${new Date()} called getInformation`)
-	Promise.all([getStarships("Death Star"), getPlanet("Alderaan"), getPeople("Darth Vader"), getPeople("Leia Organa")])
+function getInformationImpl(
+		bigScaryDeathMachine = "Death Star",
+		innocentVictimForEmotionalGutWrench = "Alderaan",
+		evilWarlord = "Darth Vader",
+		aGirlWorthFightingFor = "Leia Organa"
+	) {
+	// console.log(`${new Date()} called getInformationImpl`)
+	return Promise.all([getStarships(bigScaryDeathMachine), getPlanet(innocentVictimForEmotionalGutWrench), getPeople(evilWarlord), getPeople(aGirlWorthFightingFor)])
 		.then( async responses => {
-			let useTheForce = {};
+			let theForceThatBindsEverything = {};
 			
 			//galaxy is screwed if "Darth Vader", etc returns more than 1
 			//TODO: Check with business, what if no results? Default or error?
@@ -83,17 +88,22 @@ async function getInformation(req, res) {
 				dvStarship = await get(dvStarshipUrl);
 			}
 			
-			useTheForce.starship = dvStarship;
-			useTheForce.crew = deathstarCrew
-			useTheForce.isLeiaOnPlanet = isPersonOnPlanet(leia, alderaan);
-			res.json(useTheForce);
+			theForceThatBindsEverything.starship = dvStarship;
+			theForceThatBindsEverything.crew = deathstarCrew
+			theForceThatBindsEverything.isLeiaOnPlanet = isPersonOnPlanet(leia, alderaan);
+			return theForceThatBindsEverything;
 		})
 		.catch( error => {
 			console.warn(`Failed to fetch, error is: ${error}`)
-			res.json(error);
+			return error;
 		});
-	
+}
+
+async function getInformation(req, res) {
+	// console.log(`${new Date()} called getInformation`)
+	let obj = await getInformationImpl("Death Star", "Alderaan", "Darth Vader", "Leia Organa")
+	res.json(obj)
 }
 
 //export all the functions
-module.exports = { getInformation };
+module.exports = { getInformation, getInformationImpl};
