@@ -1,0 +1,27 @@
+{
+  "name": "Partior",
+  "version": "1.0.0",
+  "description": "A Partior API",
+  "main": "server.js",
+  "author": "Matthew",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "mongoose": "^5.13.5",
+    "config": "^1.20.1",
+    "request": "^2.88.2",
+    "express": "^4.13.4",
+    "got": "^11.8.3",
+    "morgan": "^1.7.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1",
+    "mocha": "^2.4.5",
+    "nodemon": "^2.0.15"
+  },
+  "scripts": {
+    "start": "SET NODE_ENV=dev&& nodemon src/main/server.js",
+    "test": "mocha --timeout 10000"
+  }
+}
