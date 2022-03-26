@@ -11,23 +11,8 @@ const assert = require('assert');
 const should = chai.should();
 const tieAdvanced = {
 	name: 'TIE Advanced x1',
-	model: 'Twin Ion Engine Advanced x1',
-	manufacturer: 'Sienar Fleet Systems',
-	cost_in_credits: 'unknown',
-	length: '9.2',
-	max_atmosphering_speed: '1200',
-	crew: '1',
-	passengers: '0',
-	cargo_capacity: '150',
-	consumables: '5 days',
-	hyperdrive_rating: '1.0',
-	MGLT: '105',
-	starship_class: 'Starfighter',
-	pilots: [ 'https://swapi.dev/api/people/4/' ],
-	films: [ 'https://swapi.dev/api/films/1/' ],
-	created: '2014-12-12T11:21:32.991000Z',
-	edited: '2014-12-20T21:23:49.889000Z',
-	url: 'https://swapi.dev/api/starships/13/'
+	"class": 'Starfighter',
+	model: 'Twin Ion Engine Advanced x1'
 }
 
 
@@ -39,7 +24,7 @@ describe('Starwars', () => {
 		it('when using defaults', async (done) => {
 			Starwars.getInformationImpl().then((result) => {
 				assert.deepEqual(result.starship, tieAdvanced)
-				assert.equal(result.crew, "342,953")
+				assert.equal(result.crew, 342953)
 				assert.equal(result.isLeiaOnPlanet, true)
 				done();
 			}).catch((err) => done(err));
@@ -47,7 +32,7 @@ describe('Starwars', () => {
 		it('when using wrong bigScaryDeathMachine', async (done) => {
 			Starwars.getInformationImpl("Daleks", "Alderaan", "Darth Vader", "Leia Organa").then((result) => {
 				assert.deepEqual(result.starship, tieAdvanced)
-				assert.equal(result.crew, "0")
+				assert.equal(result.crew, 0)
 				assert.equal(result.isLeiaOnPlanet, true)
 				done();
 			}).catch((err) => done(err));
@@ -55,7 +40,7 @@ describe('Starwars', () => {
 		it('when using wrong innocentVictimForEmotionalGutWrench', async (done) => {
 			Starwars.getInformationImpl("Death Star", "Bambi's mother", "Darth Vader", "Leia Organa").then((result) => {
 				assert.deepEqual(result.starship, tieAdvanced)
-				assert.equal(result.crew, "342,953")
+				assert.equal(result.crew, 342953)
 				assert.equal(result.isLeiaOnPlanet, false)
 				done();
 			}).catch((err) => done(err));
@@ -63,23 +48,23 @@ describe('Starwars', () => {
 		it('when using wrong evilWarlord', async (done) => {
 			Starwars.getInformationImpl("Death Star", "Alderaan", "Mickey Mouse", "Leia Organa").then((result) => {
 				assert.deepEqual(result.starship, {})
-				assert.equal(result.crew, "342,953")
+				assert.equal(result.crew, 342953)
 				assert.equal(result.isLeiaOnPlanet, true)
 				done();
 			}).catch((err) => done(err));
 		});
 		it('when using wrong aGirlWorthFightingFor', async (done) => {
-			Starwars.getInformationImpl("Death Star", "Alderaan", "Darth Vader", "Slave Leia").then((result) => {
+			Starwars.getInformationImpl("Death Star", "Alderaan", "Darth Vader", "Mulan").then((result) => {
 				assert.deepEqual(result.starship, tieAdvanced)
-				assert.equal(result.crew, "342,953")
+				assert.equal(result.crew, 342953)
 				assert.equal(result.isLeiaOnPlanet, false)
 				done();
 			}).catch((err) => done(err));
 		});
 		it('when using wrong innocentVictimForEmotionalGutWrench and aGirlWorthFightingFor. Just in case 2 double negatives become a positive', async (done) => {
-			Starwars.getInformationImpl("Death Star", "Alderaan", "Darth Vader", "Slave Leia").then((result) => {
+			Starwars.getInformationImpl("Death Star", "Alderaan", "Darth Vader", "Mulan").then((result) => {
 				assert.deepEqual(result.starship, tieAdvanced)
-				assert.equal(result.crew, "342,953")
+				assert.equal(result.crew, 342953)
 				assert.equal(result.isLeiaOnPlanet, false)
 				done();
 			}).catch((err) => done(err));
@@ -93,7 +78,7 @@ describe('Starwars', () => {
 		.end((err, res) => {
 			// console.log(res.body)
 			res.should.have.status(200);
-			res.body.crew.should.be.eql("342,953");
+			res.body.crew.should.be.eql(342953);
 			res.body.isLeiaOnPlanet.should.be.eql(true);
 			res.body.should.be.a('Object');
 

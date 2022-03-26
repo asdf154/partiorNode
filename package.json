@@ -16,7 +16,8 @@
     "nodemon": "^2.0.15"
   },
   "scripts": {
-    "start": "SET NODE_ENV=dev&& nodemon src/main/server.js",
+    "start": "node src/main/server.js",
+    "dev": "nodemon src/main/server.js",
     "test": "mocha --parallel --timeout 10000 src/test"
   }
 }

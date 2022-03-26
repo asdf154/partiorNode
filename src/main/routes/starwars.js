@@ -56,6 +56,21 @@ function isPersonOnPlanet(person, planet) {
 	return false;
 }
 
+function transformStarship(apiStarship) {
+	if(!!apiStarship && !!apiStarship.name && !!apiStarship.model && !!apiStarship.starship_class)
+		return {
+			"name": apiStarship.name,
+			"model": apiStarship.model,
+			"class": apiStarship.starship_class
+		}
+	else
+		return {}
+}
+
+function transformCrew(crew) {
+	return parseInt(crew.replace(/,/g, ''))
+}
+
 function getOrElse(optional, elseValue) {
 	if (!!optional) return optional;
 	else return elseValue;
@@ -78,16 +93,18 @@ function getInformationImpl(
 			const darthvader = getOrElse(responses[2].results[0], {})
 			const leia = getOrElse(responses[3].results[0], {})
 			
-			const deathstarCrew = getOrElse(deathstar.crew, 0);
+			const deathstarCrew = getOrElse(deathstar.crew, "0");
 			let dvStarship = {}
 			
 			if (!!darthvader.starships && darthvader.starships.length > 0) {
-				const dvStarshipUrl = darthvader.starships[0] //TODO: check how to choose which startship. Temporarily assume first listed starship is his primary starship. requirement only wants 1 starship in returned info
+				const dvStarshipUrl = darthvader.starships[0] //TODO: check how to choose which starship. Temporarily assume first listed starship is his primary starship. requirement only wants 1 starship in returned info
 				
 				dvStarship = await get(dvStarshipUrl);
 			}
 			
-			const theForceThatBindsEverything = {"starship": dvStarship, "crew": deathstarCrew, "isLeiaOnPlanet": isPersonOnPlanet(leia, alderaan)};
+			const transformedStarship = transformStarship(dvStarship)
+			const transformedCrew = transformCrew(deathstarCrew)
+			const theForceThatBindsEverything = {"starship": transformedStarship, "crew": transformedCrew, "isLeiaOnPlanet": isPersonOnPlanet(leia, alderaan)};
 			return theForceThatBindsEverything;
 		})
 		.catch( error => {
