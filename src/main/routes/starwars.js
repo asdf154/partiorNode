@@ -22,7 +22,6 @@ function list(whichType) {
 }
 
 function search(whichType, searchString) {
-	// console.debug(`search:\"${whichType}\";\"${searchString}\"`)
 	let searchUrl = baseApiUrl + whichType + "/?search=" + searchString
 	
 	return get(searchUrl);
@@ -63,12 +62,13 @@ function getOrElse(optional, elseValue) {
 }
 
 async function getInformation(req, res) {
-	console.log("called getInformation")
+	console.log(`${new Date()} called getInformation`)
 	Promise.all([getStarships("Death Star"), getPlanet("Alderaan"), getPeople("Darth Vader"), getPeople("Leia Organa")])
 		.then( async responses => {
 			let useTheForce = {};
 			
 			//galaxy is screwed if "Darth Vader", etc returns more than 1
+			//TODO: Check with business, what if no results? Default or error?
 			let deathstar = getOrElse(responses[0].results[0], {})
 			let alderaan  = getOrElse(responses[1].results[0], {})
 			let darthvader = getOrElse(responses[2].results[0], {})
