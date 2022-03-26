@@ -5,7 +5,7 @@ let baseApiUrl = "https://swapi.dev/api/"
 
 
 function get(url) {
-	console.debug(`get:\"${url}\"`)
+	// console.debug(`get:\"${url}\"`)
 	
 	return got(url, {responseType: 'json'}).then(response => {
 	  return response.body;
@@ -53,34 +53,43 @@ function getPlanet(maybeSearchString = "") {
 
 
 function isPersonOnPlanet(person, planet) {
-	return planet.residents.includes(person.url);
-	// return true
+	if(!!planet && planet.residents.length > 0) return planet.residents.includes(person.url);
+	return false;
 }
 
+function getOrElse(optional, elseValue) {
+	if (!!optional) return optional;
+	else return elseValue;
+}
 
 async function getInformation(req, res) {
-	
+	console.log("called getInformation")
 	Promise.all([getStarships("Death Star"), getPlanet("Alderaan"), getPeople("Darth Vader"), getPeople("Leia Organa")])
 		.then( async responses => {
 			let useTheForce = {};
 			
 			//galaxy is screwed if "Darth Vader", etc returns more than 1
-			let deathstar = responses[0].results[0]
-			let alderaan  = responses[1].results[0]
-			let darthvader = responses[2].results[0]
-			let leia = responses[3].results[0]
+			let deathstar = getOrElse(responses[0].results[0], {})
+			let alderaan  = getOrElse(responses[1].results[0], {})
+			let darthvader = getOrElse(responses[2].results[0], {})
+			let leia = getOrElse(responses[3].results[0], {})
 			
-			let dvStarshipUrl = darthvader.starships[0] //TODO: check how to choose which startship. Temporarily assume first listed starship is his primary starship. requirement only wants 1 starship in returned info
+			let deathstarCrew = getOrElse(deathstar.crew, 0);
+			let dvStarship = {}
 			
-			let dvStarship = await get(dvStarshipUrl);
+			if (!!darthvader.starships && darthvader.starships.length > 0) {
+				let dvStarshipUrl = darthvader.starships[0] //TODO: check how to choose which startship. Temporarily assume first listed starship is his primary starship. requirement only wants 1 starship in returned info
+				
+				dvStarship = await get(dvStarshipUrl);
+			}
 			
 			useTheForce.starship = dvStarship;
-			useTheForce.crew = deathstar.crew;
+			useTheForce.crew = deathstarCrew
 			useTheForce.isLeiaOnPlanet = isPersonOnPlanet(leia, alderaan);
 			res.json(useTheForce);
 		})
 		.catch( error => {
-			console.warn(`Failed to fetch: ${error}`)
+			console.warn(`Failed to fetch, error is: ${error}`)
 			res.json(error);
 		});
 	
