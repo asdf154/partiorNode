@@ -1,6 +1,6 @@
 
 const got = require('got');
-let baseApiUrl = "https://swapi.dev/api/"
+const baseApiUrl = "https://swapi.dev/api/"
 
 //improvement: logging and log level, maybe
 
@@ -16,13 +16,13 @@ function get(url) {
 
 
 function list(whichType) {
-	let listUrl = baseApiUrl + whichType
+	const listUrl = baseApiUrl + whichType
 	
 	return get(listUrl);
 }
 
 function search(whichType, searchString) {
-	let searchUrl = baseApiUrl + whichType + "/?search=" + searchString
+	const searchUrl = baseApiUrl + whichType + "/?search=" + searchString
 	
 	return get(searchUrl);
 }
@@ -70,27 +70,24 @@ function getInformationImpl(
 	// console.log(`${new Date()} called getInformationImpl`)
 	return Promise.all([getStarships(bigScaryDeathMachine), getPlanet(innocentVictimForEmotionalGutWrench), getPeople(evilWarlord), getPeople(aGirlWorthFightingFor)])
 		.then( async responses => {
-			let theForceThatBindsEverything = {};
 			
 			//galaxy is screwed if "Darth Vader", etc returns more than 1
 			//TODO: Check with business, what if no results? Default or error?
-			let deathstar = getOrElse(responses[0].results[0], {})
-			let alderaan  = getOrElse(responses[1].results[0], {})
-			let darthvader = getOrElse(responses[2].results[0], {})
-			let leia = getOrElse(responses[3].results[0], {})
+			const deathstar = getOrElse(responses[0].results[0], {})
+			const alderaan  = getOrElse(responses[1].results[0], {})
+			const darthvader = getOrElse(responses[2].results[0], {})
+			const leia = getOrElse(responses[3].results[0], {})
 			
-			let deathstarCrew = getOrElse(deathstar.crew, 0);
+			const deathstarCrew = getOrElse(deathstar.crew, 0);
 			let dvStarship = {}
 			
 			if (!!darthvader.starships && darthvader.starships.length > 0) {
-				let dvStarshipUrl = darthvader.starships[0] //TODO: check how to choose which startship. Temporarily assume first listed starship is his primary starship. requirement only wants 1 starship in returned info
+				const dvStarshipUrl = darthvader.starships[0] //TODO: check how to choose which startship. Temporarily assume first listed starship is his primary starship. requirement only wants 1 starship in returned info
 				
 				dvStarship = await get(dvStarshipUrl);
 			}
 			
-			theForceThatBindsEverything.starship = dvStarship;
-			theForceThatBindsEverything.crew = deathstarCrew
-			theForceThatBindsEverything.isLeiaOnPlanet = isPersonOnPlanet(leia, alderaan);
+			const theForceThatBindsEverything = {"starship": dvStarship, "crew": deathstarCrew, "isLeiaOnPlanet": isPersonOnPlanet(leia, alderaan)};
 			return theForceThatBindsEverything;
 		})
 		.catch( error => {
@@ -101,7 +98,7 @@ function getInformationImpl(
 
 async function getInformation(req, res) {
 	// console.log(`${new Date()} called getInformation`)
-	let obj = await getInformationImpl("Death Star", "Alderaan", "Darth Vader", "Leia Organa")
+	const obj = await getInformationImpl("Death Star", "Alderaan", "Darth Vader", "Leia Organa")
 	res.json(obj)
 }
 

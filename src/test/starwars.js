@@ -1,14 +1,14 @@
 //During the test the env variable is set to test
 process.env.NODE_ENV = 'test';
 
-let Starwars = require('../main/routes/starwars');
+const Starwars = require('../main/routes/starwars');
 
 //Require the dev-dependencies
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../main/server');
-let assert = require('assert');
-let should = chai.should();
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../main/server');
+const assert = require('assert');
+const should = chai.should();
 const tieAdvanced = {
 	name: 'TIE Advanced x1',
 	model: 'Twin Ion Engine Advanced x1',
