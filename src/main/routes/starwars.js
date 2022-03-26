@@ -2,7 +2,7 @@
 const got = require('got');
 let baseApiUrl = "https://swapi.dev/api/"
 
-//todo: logging and log level, maybe
+//improvement: logging and log level, maybe
 
 function get(url) {
 	// console.debug(`${new Date()} called get:\"${url}\"`)

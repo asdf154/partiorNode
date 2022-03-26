@@ -76,7 +76,15 @@ describe('Starwars', () => {
 				done();
 			}).catch((err) => done(err));
 		});
-		//todo: does mocha support property driven or table driven testing?
+		it('when using wrong innocentVictimForEmotionalGutWrench and aGirlWorthFightingFor. Just in case 2 double negatives become a positive', async (done) => {
+			Starwars.getInformationImpl("Death Star", "Alderaan", "Darth Vader", "Slave Leia").then((result) => {
+				assert.deepEqual(result.starship, tieAdvanced)
+				assert.equal(result.crew, "342,953")
+				assert.equal(result.isLeiaOnPlanet, false)
+				done();
+			}).catch((err) => done(err));
+		});
+		//improvement: does mocha support property driven or table driven testing?
 	});
 	describe('/information', () => {
 		it('it should return the json of starwars info', async (done) => {
